@@ -2,8 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
+use App\Facades\Locations;
 use Livewire\Component;
 
 class DynamicDropdown extends Component
@@ -13,25 +12,12 @@ class DynamicDropdown extends Component
 
     public function getEstadosProperty()
     {
-        if (! Cache::get('estados')) {
-             Cache::put('estados', Http::get(
-                 'https://servicodados.ibge.gov.br/api/v1/localidades/estados',
-                 ['orderBy' => 'nome']
-             )->object());
-        }
-
-        return Cache::get('estados');
+        return Locations::getEstados();
     }
 
     public function updatedEstado()
     {
-        if (! Cache::get('municipios_' . $this->estado)) {
-            Cache::put('municipios_' . $this->estado, Http::get(
-                "https://servicodados.ibge.gov.br/api/v1/localidades/estados/{$this->estado}/municipios"
-            )->object());
-        }
-
-        $this->municipios = Cache::get('municipios_' . $this->estado);
+        $this->municipios = Locations::getMunicipios($this->estado);
     }
 
     public function render()
