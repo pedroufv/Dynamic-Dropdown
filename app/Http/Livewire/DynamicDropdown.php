@@ -13,11 +13,9 @@ class DynamicDropdown extends Component
 
     public function updatedEstado()
     {
-        $this->municipios = json_decode(
-            Http::get(
-                "https://servicodados.ibge.gov.br/api/v1/localidades/estados/{$this->estado}/municipios"
-            )->body()
-        );
+        $this->municipios = Http::get(
+            "https://servicodados.ibge.gov.br/api/v1/localidades/estados/{$this->estado}/municipios"
+        )->object();
     }
 
     public function render()
@@ -25,7 +23,7 @@ class DynamicDropdown extends Component
         $this->estados = Http::get(
             'https://servicodados.ibge.gov.br/api/v1/localidades/estados',
             ['orderBy' => 'nome']
-        )->json();
+        )->object();
 
         return view('livewire.dynamic-dropdown');
     }
