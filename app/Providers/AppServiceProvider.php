@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
-use App\Services\LocationsService;
+use App\Services\LocationsApiService;
+use App\Services\LocationsDbService;
+use App\Services\LocationsServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,8 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->singleton('Locations', function() {
-            return new LocationsService();
-        });
+        $this->app->bind(LocationsServiceInterface::class, LocationsApiService::class);
+
+        $this->app->singleton('Locations', LocationsServiceInterface::class);
     }
 }
